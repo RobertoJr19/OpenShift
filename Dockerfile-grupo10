@@ -21,6 +21,6 @@ CMD ["httpd", "-D", "FOREGROUND"]
 # https://docs.docker.com/engine/reference/builder/#maintainer-deprecated
 #
 # Necessario utilizar o codigo abaixo
-# LABEL org.opencontainers.image.authors="SvenDowideit@home.org.au"
+# LABEL org.opencontainers.image.authors="RM341498@fiap.com.br"
 #
 #####
