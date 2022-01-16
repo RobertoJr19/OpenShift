@@ -1,135 +1,479 @@
-kind: Build
-apiVersion: build.openshift.io/v1
+kind: Deployment
+apiVersion: apps/v1
 metadata:
   annotations:
-    openshift.io/build-config.name: blog-django-py-app
-    openshift.io/build.number: '1'
-    openshift.io/build.pod-name: blog-django-py-app-1-build
-  selfLink: /apis/build.openshift.io/v1/namespaces/dev-fiap/builds/blog-django-py-app-1
-  resourceVersion: '19368359'
-  name: blog-django-py-app-1
-  uid: 8a2d6f57-c16a-47ae-9677-8235a77fdb6e
-  creationTimestamp: '2022-01-13T03:13:50Z'
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/vcs-ref: ''
+    app.openshift.io/vcs-uri: 'https://github.com/openshift-instruqt/blog-django-py'
+    deployment.kubernetes.io/revision: '2'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"blog-django-py2:latest","namespace":"dev-fiap"},"fieldPath":"spec.template.spec.containers[?(@.name==\"blog-django-py2\")].image","pause":"false"}]
+    openshift.io/generated-by: OpenShiftWebConsole
+  name: blog-django-py2
   namespace: dev-fiap
-  ownerReferences:
-    - apiVersion: build.openshift.io/v1
-      kind: BuildConfig
-      name: blog-django-py-app
-      uid: c31a6fa0-4a96-4e8b-9649-eabda29a3ede
-      controller: true
-  labels:
-    app: blog-django-py-app
-    app.kubernetes.io/part-of: blog-django-py
-    app.kubernetes.io/instance: blog-django-py-app
-    openshift.io/build-config.name: blog-django-py-app
-    app.kubernetes.io/component: blog-django-py-app
-    openshift.io/build.start-policy: Serial
-    buildconfig: blog-django-py-app
-    app.openshift.io/runtime: python
-    app.kubernetes.io/name: python
-    app.openshift.io/runtime-version: 3.8-ubi7
 spec:
-  nodeSelector: null
-  output:
-    to:
-      kind: ImageStreamTag
-      name: 'blog-django-py-app:latest'
-    pushSecret:
-      name: builder-dockercfg-dqk4l
-  resources: {}
-  triggeredBy:
-    - message: Image change
-      imageChangeBuild:
-        imageID: >-
-          image-registry.openshift-image-registry.svc:5000/openshift/python@sha256:210326ea7d1a940d7e8f057cc96a6115c8443658b91a95d6c0ddc91ad80566cd
-        fromRef:
-          kind: ImageStreamTag
-          namespace: openshift
-          name: 'python:3.8-ubi7'
-  strategy:
-    type: Source
-    sourceStrategy:
-      from:
-        kind: DockerImage
-        name: >-
-          image-registry.openshift-image-registry.svc:5000/openshift/python@sha256:210326ea7d1a940d7e8f057cc96a6115c8443658b91a95d6c0ddc91ad80566cd
-      pullSecret:
-        name: builder-dockercfg-dqk4l
-  postCommit: {}
-  serviceAccount: builder
-  source:
-    type: Git
-    git:
-      uri: 'https://github.com/openshift-katacoda/blog-django-py.git'
-    contextDir: /
-  revision:
-    type: Git
-    git:
-      commit: 9c4f338ab5f3a5ae379ecaa5bcc7d449fa41648e
-      author:
-        name: ryan jarvinen
-        email: ryan.jarvinen@gmail.com
-      committer:
-        name: GitHub
-        email: noreply@github.com
-      message: 'Merge pull request #9 from mixpix3ls/master'
+  # replicas: 1
+  selector:
+    matchLabels:
+      app: blog-django-py2
+  template:
+    metadata:
+      labels:
+        app: blog-django-py2
+        deploymentconfig: blog-django-py2
+    spec:
+      containers:
+        - name: blog-django-py2
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/dev-fiap/blog-django-py2@sha256:e7a44cf50a9bd6238b8ab7887a7fe8173aa3d9cb2e382fcddc9b25b9968efaad
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+
+
+### Testes realizados
+###### teste 1
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: blog-django-py-app
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: blog-django-py-app
+#   template:
+#     metadata:
+#       labels:
+#         app: blog-django-py-app
+#     spec:
+#       containers:
+#       - name: blog-django-py-app
+#         image: https://github.com/openshift-katacoda/blog-django-py.git
+#         ports:
+#         - containerPort: 80
+######
+
+###### teste 2
+# kind: Deployment
+# apiVersion: apps/v1
+# metadata:
+#   annotations:
+#     alpha.image.policy.openshift.io/resolve-names: '*'
+#     app.openshift.io/vcs-ref: ''
+#     app.openshift.io/vcs-uri: 'https://github.com/openshift-instruqt/blog-django-py'
+#     deployment.kubernetes.io/revision: '2'
+#     image.openshift.io/triggers: >-
+#       [{"from":{"kind":"ImageStreamTag","name":"blog-django-py2:latest","namespace":"dev-fiap"},"fieldPath":"spec.template.spec.containers[?(@.name==\"blog-django-py2\")].image","pause":"false"}]
+#     openshift.io/generated-by: OpenShiftWebConsole
+#   selfLink: /apis/apps/v1/namespaces/dev-fiap/deployments/blog-django-py2
+#   resourceVersion: '22577934'
+#   name: blog-django-py2
+#   uid: bcb3dcfa-08b9-4ddc-a7c7-39aa563445e4
+#   creationTimestamp: '2022-01-16T19:22:33Z'
+#   generation: 2
+#   managedFields:
+#     - manager: Mozilla
+#       operation: Update
+#       apiVersion: apps/v1
+#       time: '2022-01-16T19:22:33Z'
+#       fieldsType: FieldsV1
+#       fieldsV1:
+#         'f:metadata':
+#           'f:annotations':
+#             .: {}
+#             'f:alpha.image.policy.openshift.io/resolve-names': {}
+#             'f:app.openshift.io/vcs-ref': {}
+#             'f:app.openshift.io/vcs-uri': {}
+#             'f:image.openshift.io/triggers': {}
+#             'f:openshift.io/generated-by': {}
+#           'f:labels':
+#             .: {}
+#             'f:app': {}
+#             'f:app.kubernetes.io/component': {}
+#             'f:app.kubernetes.io/instance': {}
+#             'f:app.kubernetes.io/name': {}
+#             'f:app.kubernetes.io/part-of': {}
+#             'f:app.openshift.io/runtime': {}
+#             'f:app.openshift.io/runtime-version': {}
+#         'f:spec':
+#           'f:progressDeadlineSeconds': {}
+#           'f:replicas': {}
+#           'f:revisionHistoryLimit': {}
+#           'f:selector':
+#             'f:matchLabels':
+#               .: {}
+#               'f:app': {}
+#           'f:strategy':
+#             'f:rollingUpdate':
+#               .: {}
+#               'f:maxSurge': {}
+#               'f:maxUnavailable': {}
+#             'f:type': {}
+#           'f:template':
+#             'f:metadata':
+#               'f:labels':
+#                 .: {}
+#                 'f:app': {}
+#                 'f:deploymentconfig': {}
+#             'f:spec':
+#               'f:containers':
+#                 'k:{"name":"blog-django-py2"}':
+#                   .: {}
+#                   'f:imagePullPolicy': {}
+#                   'f:name': {}
+#                   'f:ports':
+#                     .: {}
+#                     'k:{"containerPort":8080,"protocol":"TCP"}':
+#                       .: {}
+#                       'f:containerPort': {}
+#                       'f:protocol': {}
+#                   'f:resources': {}
+#                   'f:terminationMessagePath': {}
+#                   'f:terminationMessagePolicy': {}
+#               'f:dnsPolicy': {}
+#               'f:restartPolicy': {}
+#               'f:schedulerName': {}
+#               'f:securityContext': {}
+#               'f:terminationGracePeriodSeconds': {}
+#     - manager: openshift-controller-manager
+#       operation: Update
+#       apiVersion: apps/v1
+#       time: '2022-01-16T19:23:43Z'
+#       fieldsType: FieldsV1
+#       fieldsV1:
+#         'f:spec':
+#           'f:template':
+#             'f:spec':
+#               'f:containers':
+#                 'k:{"name":"blog-django-py2"}':
+#                   'f:image': {}
+#     - manager: kube-controller-manager
+#       operation: Update
+#       apiVersion: apps/v1
+#       time: '2022-01-16T19:23:48Z'
+#       fieldsType: FieldsV1
+#       fieldsV1:
+#         'f:metadata':
+#           'f:annotations':
+#             'f:deployment.kubernetes.io/revision': {}
+#         'f:status':
+#           'f:availableReplicas': {}
+#           'f:conditions':
+#             .: {}
+#             'k:{"type":"Available"}':
+#               .: {}
+#               'f:lastTransitionTime': {}
+#               'f:lastUpdateTime': {}
+#               'f:message': {}
+#               'f:reason': {}
+#               'f:status': {}
+#               'f:type': {}
+#             'k:{"type":"Progressing"}':
+#               .: {}
+#               'f:lastTransitionTime': {}
+#               'f:lastUpdateTime': {}
+#               'f:message': {}
+#               'f:reason': {}
+#               'f:status': {}
+#               'f:type': {}
+#           'f:observedGeneration': {}
+#           'f:readyReplicas': {}
+#           'f:replicas': {}
+#           'f:updatedReplicas': {}
+#   namespace: dev-fiap
+#   labels:
+#     app: blog-django-py2
+#     app.kubernetes.io/component: blog-django-py2
+#     app.kubernetes.io/instance: blog-django-py2
+#     app.kubernetes.io/name: python
+#     app.kubernetes.io/part-of: blog-django-py-app
+#     app.openshift.io/runtime: python
+#     app.openshift.io/runtime-version: 3.8-ubi7
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: blog-django-py2
+#   template:
+#     metadata:
+#       creationTimestamp: null
+#       labels:
+#         app: blog-django-py2
+#         deploymentconfig: blog-django-py2
+#     spec:
+#       containers:
+#         - name: blog-django-py2
+#           image: >-
+#             image-registry.openshift-image-registry.svc:5000/dev-fiap/blog-django-py2@sha256:a479bc1ea292e52985532a21a1269957a1546afb8f038835dada9ba2677e3d23
+#           ports:
+#             - containerPort: 8080
+#               protocol: TCP
+#           resources: {}
+#           terminationMessagePath: /dev/termination-log
+#           terminationMessagePolicy: File
+#           imagePullPolicy: Always
+#       restartPolicy: Always
+#       terminationGracePeriodSeconds: 30
+#       dnsPolicy: ClusterFirst
+#       securityContext: {}
+#       schedulerName: default-scheduler
+#   strategy:
+#     type: RollingUpdate
+#     rollingUpdate:
+#       maxUnavailable: 25%
+#       maxSurge: 25%
+#   revisionHistoryLimit: 10
+#   progressDeadlineSeconds: 600
 # status:
+#   observedGeneration: 2
+#   replicas: 1
+#   updatedReplicas: 1
+#   readyReplicas: 1
+#   availableReplicas: 1
+#   conditions:
+#     - type: Available
+#       status: 'True'
+#       lastUpdateTime: '2022-01-16T19:23:48Z'
+#       lastTransitionTime: '2022-01-16T19:23:48Z'
+#       reason: MinimumReplicasAvailable
+#       message: Deployment has minimum availability.
+#     - type: Progressing
+#       status: 'True'
+#       lastUpdateTime: '2022-01-16T19:23:48Z'
+#       lastTransitionTime: '2022-01-16T19:22:33Z'
+#       reason: NewReplicaSetAvailable
+#       message: ReplicaSet "blog-django-py2-79d88cbc4c" has successfully progressed.
+# ---
+# kind: Build
+# apiVersion: build.openshift.io/v1
+# metadata:
+#   annotations:
+#     openshift.io/build-config.name: blog-django-py2
+#     openshift.io/build.number: '1'
+#     openshift.io/build.pod-name: blog-django-py2-1-build
+#   selfLink: /apis/build.openshift.io/v1/namespaces/dev-fiap/builds/blog-django-py2-1
+#   resourceVersion: '22589382'
+#   name: blog-django-py2-1
+#   uid: c9377e95-87aa-46a5-a8a6-6cf84c71a7af
+#   creationTimestamp: '2022-01-16T19:41:59Z'
+#   namespace: dev-fiap
+#   ownerReferences:
+#     - apiVersion: build.openshift.io/v1
+#       kind: BuildConfig
+#       name: blog-django-py2
+#       uid: fb380b62-5017-446f-9240-f94c301b2f70
+#       controller: true
+#   labels:
+#     app: blog-django-py2
+#     app.kubernetes.io/part-of: blog-django-py-app
+#     app.kubernetes.io/instance: blog-django-py2
+#     openshift.io/build-config.name: blog-django-py2
+#     app.kubernetes.io/component: blog-django-py2
+#     openshift.io/build.start-policy: Serial
+#     buildconfig: blog-django-py2
+#     app.openshift.io/runtime: python
+#     app.kubernetes.io/name: python
+#     app.openshift.io/runtime-version: 3.8-ubi7
+# spec:
+#   nodeSelector: null
 #   output:
 #     to:
-#       imageDigest: 'sha256:39933f45af34e398c99a542c15018a73c967edb207e72ca19e845e4d4ec64f74'
-#   config:
-#     kind: BuildConfig
-#     namespace: dev-fiap
-#     name: blog-django-py-app
-#   outputDockerImageReference: >-
-#     image-registry.openshift-image-registry.svc:5000/dev-fiap/blog-django-py-app:latest
-#   duration: 72000000000
-#   startTimestamp: '2022-01-13T03:13:50Z'
-#   stages:
-#     - name: FetchInputs
-#       startTime: '2022-01-13T03:13:53Z'
-#       durationMilliseconds: 461
-#       steps:
-#         - name: FetchGitSource
-#           startTime: '2022-01-13T03:13:53Z'
-#           durationMilliseconds: 461
-#     - name: PullImages
-#       startTime: '2022-01-13T03:13:55Z'
-#       durationMilliseconds: 22954
-#       steps:
-#         - name: PullBaseImage
-#           startTime: '2022-01-13T03:13:55Z'
-#           durationMilliseconds: 22954
-#     - name: Build
-#       startTime: '2022-01-13T03:14:18Z'
-#       durationMilliseconds: 41992
-#       steps:
-#         - name: DockerBuild
-#           startTime: '2022-01-13T03:14:18Z'
-#           durationMilliseconds: 41992
-#     - name: PushImage
-#       startTime: '2022-01-13T03:15:00Z'
-#       durationMilliseconds: 954
-#       steps:
-#         - name: PushImage
-#           startTime: '2022-01-13T03:15:00Z'
-#           durationMilliseconds: 954
-#   conditions:
-#     - type: New
-#       status: 'False'
-#       lastUpdateTime: '2022-01-13T03:13:50Z'
-#       lastTransitionTime: '2022-01-13T03:13:50Z'
-#     - type: Pending
-#       status: 'False'
-#       lastUpdateTime: '2022-01-13T03:13:53Z'
-#       lastTransitionTime: '2022-01-13T03:13:53Z'
-#     - type: Running
-#       status: 'False'
-#       lastUpdateTime: '2022-01-13T03:15:02Z'
-#       lastTransitionTime: '2022-01-13T03:15:02Z'
-#     - type: Complete
-#       status: 'True'
-#       lastUpdateTime: '2022-01-13T03:15:02Z'
-#       lastTransitionTime: '2022-01-13T03:15:02Z'
-#   completionTimestamp: '2022-01-13T03:15:02Z'
-#   phase: Complete
+#       kind: ImageStreamTag
+#       name: 'blog-django-py2:latest'
+#     pushSecret:
+#       name: builder-dockercfg-dqk4l
+#   resources: {}
+#   triggeredBy:
+#     - message: Image change
+#       imageChangeBuild:
+#         imageID: >-
+#           image-registry.openshift-image-registry.svc:5000/openshift/python@sha256:210326ea7d1a940d7e8f057cc96a6115c8443658b91a95d6c0ddc91ad80566cd
+#         fromRef:
+#           kind: ImageStreamTag
+#           namespace: openshift
+#           name: 'python:3.8-ubi7'
+#   strategy:
+#     type: Source
+#     sourceStrategy:
+#       from:
+#         kind: DockerImage
+#         name: >-
+#           image-registry.openshift-image-registry.svc:5000/openshift/python@sha256:210326ea7d1a940d7e8f057cc96a6115c8443658b91a95d6c0ddc91ad80566cd
+#       pullSecret:
+#         name: builder-dockercfg-dqk4l
+#   postCommit: {}
+#   serviceAccount: builder
+#   source:
+#     type: Git
+#     git:
+#       uri: 'https://github.com/openshift-instruqt/blog-django-py'
+#     contextDir: /
+#   revision:
+#     type: Git
+#     git:
+#       commit: 9c4f338ab5f3a5ae379ecaa5bcc7d449fa41648e
+#       author:
+#         name: ryan jarvinen
+#         email: ryan.jarvinen@gmail.com
+#       committer:
+#         name: GitHub
+#         email: noreply@github.com
+#       message: 'Merge pull request #9 from mixpix3ls/master'
+# # ---
+# # kind: Service
+# # apiVersion: v1
+# # metadata:
+# #   annotations:
+# #     app.openshift.io/vcs-ref: ''
+# #     app.openshift.io/vcs-uri: 'https://github.com/openshift-instruqt/blog-django-py'
+# #     openshift.io/generated-by: OpenShiftWebConsole
+# #   selfLink: /api/v1/namespaces/dev-fiap/services/blog-django-py2
+# #   resourceVersion: '22589326'
+# #   name: blog-django-py2
+# #   uid: e7ac31f8-7e20-4ad5-919f-dd769cbd806e
+# #   creationTimestamp: '2022-01-16T19:41:59Z'
+# #   managedFields:
+# #     - manager: Mozilla
+# #       operation: Update
+# #       apiVersion: v1
+# #       time: '2022-01-16T19:41:59Z'
+# #       fieldsType: FieldsV1
+# #       fieldsV1:
+# #         'f:metadata':
+# #           'f:annotations':
+# #             .: {}
+# #             'f:app.openshift.io/vcs-ref': {}
+# #             'f:app.openshift.io/vcs-uri': {}
+# #             'f:openshift.io/generated-by': {}
+# #           'f:labels':
+# #             .: {}
+# #             'f:app': {}
+# #             'f:app.kubernetes.io/component': {}
+# #             'f:app.kubernetes.io/instance': {}
+# #             'f:app.kubernetes.io/name': {}
+# #             'f:app.kubernetes.io/part-of': {}
+# #             'f:app.openshift.io/runtime': {}
+# #             'f:app.openshift.io/runtime-version': {}
+# #         'f:spec':
+# #           'f:ports':
+# #             .: {}
+# #             'k:{"port":8080,"protocol":"TCP"}':
+# #               .: {}
+# #               'f:name': {}
+# #               'f:port': {}
+# #               'f:protocol': {}
+# #               'f:targetPort': {}
+# #           'f:selector':
+# #             .: {}
+# #             'f:app': {}
+# #             'f:deploymentconfig': {}
+# #           'f:sessionAffinity': {}
+# #           'f:type': {}
+# #   namespace: dev-fiap
+# #   labels:
+# #     app: blog-django-py2
+# #     app.kubernetes.io/component: blog-django-py2
+# #     app.kubernetes.io/instance: blog-django-py2
+# #     app.kubernetes.io/name: python
+# #     app.kubernetes.io/part-of: blog-django-py-app
+# #     app.openshift.io/runtime: python
+# #     app.openshift.io/runtime-version: 3.8-ubi7
+# # spec:
+# #   ports:
+# #     - name: 8080-tcp
+# #       protocol: TCP
+# #       port: 8080
+# #       targetPort: 8080
+# #   selector:
+# #     app: blog-django-py2
+# #     deploymentconfig: blog-django-py2
+# #   clusterIP: 172.30.166.12
+# #   type: ClusterIP
+# #   sessionAffinity: None
+# # status:
+# #   loadBalancer: {}
+
+# # ---
+# # kind: Route
+# # apiVersion: route.openshift.io/v1
+# # metadata:
+# #   annotations:
+# #     openshift.io/host.generated: 'true'
+# #   selfLink: /apis/route.openshift.io/v1/namespaces/dev-fiap/routes/blog-django-py2
+# #   resourceVersion: '22589333'
+# #   name: blog-django-py2
+# #   uid: f9dd041a-2c27-4771-bc75-a1a82dfebd45
+# #   creationTimestamp: '2022-01-16T19:41:59Z'
+# #   managedFields:
+# #     - manager: Mozilla
+# #       operation: Update
+# #       apiVersion: route.openshift.io/v1
+# #       time: '2022-01-16T19:41:59Z'
+# #       fieldsType: FieldsV1
+# #       fieldsV1:
+# #         'f:metadata':
+# #           'f:labels':
+# #             .: {}
+# #             'f:app': {}
+# #             'f:app.kubernetes.io/component': {}
+# #             'f:app.kubernetes.io/instance': {}
+# #             'f:app.kubernetes.io/name': {}
+# #             'f:app.kubernetes.io/part-of': {}
+# #             'f:app.openshift.io/runtime': {}
+# #             'f:app.openshift.io/runtime-version': {}
+# #         'f:spec':
+# #           'f:port':
+# #             .: {}
+# #             'f:targetPort': {}
+# #           'f:to':
+# #             'f:kind': {}
+# #             'f:name': {}
+# #             'f:weight': {}
+# #           'f:wildcardPolicy': {}
+# #     - manager: openshift-router
+# #       operation: Update
+# #       apiVersion: route.openshift.io/v1
+# #       time: '2022-01-16T19:41:59Z'
+# #       fieldsType: FieldsV1
+# #       fieldsV1:
+# #         'f:status':
+# #           'f:ingress': {}
+# #   namespace: dev-fiap
+# #   labels:
+# #     app: blog-django-py2
+# #     app.kubernetes.io/component: blog-django-py2
+# #     app.kubernetes.io/instance: blog-django-py2
+# #     app.kubernetes.io/name: python
+# #     app.kubernetes.io/part-of: blog-django-py-app
+# #     app.openshift.io/runtime: python
+# #     app.openshift.io/runtime-version: 3.8-ubi7
+# # spec:
+# #   host: blog-django-py2-dev-fiap.apps.na46.prod.nextcle.com
+# #   to:
+# #     kind: Service
+# #     name: blog-django-py2
+# #     weight: 100
+# #   port:
+# #     targetPort: 8080-tcp
+# #   wildcardPolicy: None
+# # status:
+# #   ingress:
+# #     - host: blog-django-py2-dev-fiap.apps.na46.prod.nextcle.com
+# #       routerName: default
+# #       conditions:
+# #         - type: Admitted
+# #           status: 'True'
+# #           lastTransitionTime: '2022-01-16T19:41:59Z'
+# #       wildcardPolicy: None
+# #       routerCanonicalHostname: apps.na46.prod.nextcle.com
+###### teste 2
