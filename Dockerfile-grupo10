@@ -1,0 +1,26 @@
+FROM ubi8/ubi:8.3
+
+MAINTAINER Roberto Junior  <RM341498@fiap.com.br>
+
+LABEL description="A custom Apache container based on UBI 8"
+
+RUN yum install -y httpd && \
+    yum clean all
+
+RUN echo "Hello from Containerfile - Studants RM341498 | RM341235 | " > /var/www/html/index.html
+
+EXPOSE 80
+
+CMD ["httpd", "-D", "FOREGROUND"]
+
+
+#####
+# Caso o codigo apresente erro devido ao uso da instrução 'MAINTAINER'
+#
+# MAINTAINER (deprecated)
+# https://docs.docker.com/engine/reference/builder/#maintainer-deprecated
+#
+# Necessario utilizar o codigo abaixo
+# LABEL org.opencontainers.image.authors="RM341498@fiap.com.br"
+#
+#####

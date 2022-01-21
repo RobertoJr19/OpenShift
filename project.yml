@@ -1,0 +1,54 @@
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: dev-fiap
+  # selfLink: /apis/project.openshift.io/v1/projects/dev-fiap
+  # uid: c7aae178-ab1d-4db1-939b-4262006856e9
+  # resourceVersion: '19364319'
+  # creationTimestamp: '2022-01-13T03:09:40Z'
+  annotations:
+    openshift.io/description: ''
+    openshift.io/display-name: ''
+    openshift.io/requester: unittk
+    openshift.io/sa.scc.mcs: 's0:c33,c22'
+    openshift.io/sa.scc.supplemental-groups: 1001100000/10000
+    openshift.io/sa.scc.uid-range: 1001100000/10000
+  managedFields:
+    - manager: cluster-policy-controller
+      operation: Update
+      apiVersion: v1
+      time: '2022-01-13T03:09:40Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:openshift.io/sa.scc.mcs': {}
+            'f:openshift.io/sa.scc.supplemental-groups': {}
+            'f:openshift.io/sa.scc.uid-range': {}
+    - manager: openshift-apiserver
+      operation: Update
+      apiVersion: v1
+      time: '2022-01-13T03:09:40Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:openshift.io/description': {}
+            'f:openshift.io/display-name': {}
+            'f:openshift.io/requester': {}
+        'f:status':
+          'f:phase': {}
+    - manager: openshift-controller-manager
+      operation: Update
+      apiVersion: v1
+      time: '2022-01-13T03:09:40Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:finalizers': {}
+spec:
+  finalizers:
+    - kubernetes
+status:
+  phase: Active
