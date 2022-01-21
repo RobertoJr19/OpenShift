@@ -5,7 +5,7 @@ metadata:
     openshift.io/generated-by: OpenShiftNewApp
     template.alpha.openshift.io/wait-for-ready: 'true'
   selfLink: >-
-    /apis/apps.openshift.io/v1/namespaces/dev-fiap/deploymentconfigs/sample-database
+    /apis/apps.openshift.io/v1/namespaces/fiap/deploymentconfigs/sample-database
   resourceVersion: '19383724'
   name: sample-database
   uid: cf1c4088-2bf1-4ff1-8093-2856006fae05
@@ -186,7 +186,7 @@ metadata:
           'f:observedGeneration': {}
           'f:unavailableReplicas': {}
           'f:latestVersion': {}
-  namespace: dev-fiap
+  namespace: fiap
   labels:
     app: sample-database
     app.kubernetes.io/component: sample-database
