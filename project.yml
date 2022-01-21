@@ -2,10 +2,6 @@ kind: Project
 apiVersion: project.openshift.io/v1
 metadata:
   name: fiap
-  # selfLink: /apis/project.openshift.io/v1/projects/fiap
-  # uid: c7aae178-ab1d-4db1-939b-4262006856e9
-  # resourceVersion: '19364319'
-  # creationTimestamp: '2022-01-13T03:09:40Z'
   annotations:
     openshift.io/description: ''
     openshift.io/display-name: ''
